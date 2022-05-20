@@ -2,9 +2,9 @@ defmodule WatchWeb.WatchLive do
   use WatchWeb, :live_view
 
   def mount(_params, _session, socket) do
-    # GenServer.start_link(WatchWeb.ClockManager, self())
+    GenServer.start_link(WatchWeb.ClockManager, self())
     # GenServer.start_link(WatchWeb.StopwatchManager, self())
-    # GenServer.start_link(WatchWeb.IndigloManager, self())
+    GenServer.start_link(WatchWeb.IndigloManager, self())
     {:ok, assign(socket, time: "12:00:00", indiglo: "white")}
   end
 
@@ -24,7 +24,7 @@ defmodule WatchWeb.WatchLive do
   end
   def handle_event(event, _payload, socket) do
     IO.inspect event
-    # :gproc.send({:p, :l, :ui_event}, String.to_atom(event))
+    :gproc.send({:p, :l, :ui_event}, String.to_atom(event))
     {:noreply, socket}
   end
 
