@@ -11,11 +11,15 @@ defmodule WatchWeb.IndigloManager do
     {:noreply, state |> Map.put(:st, IndigloOn)}
   end
 
-  def handle_info(:"top-right", %{ui_pid: ui, st: IndigloOn} = state) do
+  def handle_info(:"top-right", %{st: IndigloOn} = state) do
+    Process.send_after(self(), :waiting_indiglooff, 2000)
+    {:noreply, state |> Map.put(:st, Waiting)}
+  end
+
+  def handle_info(:waiting_indiglooff, %{ui_pid: ui, st: Waiting} = state) do
     GenServer.cast(ui, :unset_indiglo)
     {:noreply, state |> Map.put(:st, IndigloOff)}
   end
-
 
   def handle_info(_event, state) do
     {:noreply, state}
