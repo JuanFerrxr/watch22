@@ -2,7 +2,7 @@ defmodule WatchWeb.WatchLive do
   use WatchWeb, :live_view
 
   def mount(_params, _session, socket) do
-    # GenServer.start_link(WatchWeb.ClockManager, self())
+    GenServer.start_link(WatchWeb.ClockManager, self())
     GenServer.start_link(WatchWeb.StopwatchManager, self())
     GenServer.start_link(WatchWeb.IndigloManager, self())
     {:ok, assign(socket, time: "12:00:00", indiglo: "white")}

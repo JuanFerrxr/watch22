@@ -7,7 +7,10 @@ defmodule WatchWeb.StopwatchManager do
     {:ok, %{ui_pid: ui, count: ~T[00:00:00.00], st1: Working, st2: Paused, mode: Time}}
   end
 
-  def handle_info(:"bottom-left", %{ui_pid: ui, st1: Working} = state) do
+  # ----------------------------------------------------
+  #  Working --- bottom-left/count = 0; set_time_display() ----> Working
+  # ----------------------------------------------------
+  def handle_info(:"bottom-left", %{ui_pid: ui, st1: Working, mode: SWatch} = state) do
     GenServer.cast(ui, {:set_time_display, "00:00.00" })
     {:noreply, %{state | count: ~T[00:00:00.00]}}
   end
@@ -20,6 +23,8 @@ defmodule WatchWeb.StopwatchManager do
     GenServer.cast(ui, {:set_time_display, Time.truncate(count, :millisecond) |> Time.to_string  |> String.slice(3, 8) })
     {:noreply, %{state | mode: SWatch}}
   end
+
+  ###################################################################
 
   def handle_info(:"bottom-right", %{st2: Paused, mode: SWatch} = state) do
     Process.send_after(self(), :counting_counting, 10)
