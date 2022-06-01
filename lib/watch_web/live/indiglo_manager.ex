@@ -24,4 +24,6 @@ defmodule WatchWeb.IndigloManager do
   def handle_info(_event, state) do
     {:noreply, state}
   end
+
+  #Esto es una prueba
 end
